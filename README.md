@@ -48,7 +48,7 @@ showDialog(
 
 ## Example
 
-See the [example application](https://github.com/nemoryoliver/rating_dialog/example) source
+See the [example application](https://github.com/nemoryoliver/rating_dialog/tree/master/example) source
 for a complete sample app using the rating_dialog package.
 
 ## Issues and feedback
