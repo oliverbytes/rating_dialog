@@ -2,7 +2,9 @@
 
 A beautiful and customizable Star Rating Dialog package for Flutter
 
-![](https://github.com/jzoom/images/raw/master/layout1.gif)
+![](https://github.com/nemoryoliver/rating_dialog/blob/master/images/1.gif)
+
+![](https://github.com/nemoryoliver/rating_dialog/blob/master/images/2.gif)
 
 ### Import the rating_dialog package
 To use the rating_dialog plugin, follow the [plugin installation instructions](https://pub.dartlang.org/packages/rating_dialog#pub-pkg-tab-installing).
