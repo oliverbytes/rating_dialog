@@ -3,7 +3,14 @@ library rating_dialog;
 import 'package:flutter/material.dart';
 
 class _RatingDialogState extends State<RatingDialog> {
-  int _rating = 0;
+  int _rating;
+
+  @override
+  void initState() {
+    _rating = widget.initialRating;
+    super.initState();
+  }
+
   String _comment = '';
   List<Widget> _buildStarRatingButtons() {
     List<Widget> buttons = [];
@@ -136,6 +143,7 @@ class _RatingDialogState extends State<RatingDialog> {
 
 class RatingDialog extends StatefulWidget {
   final String title;
+  final int initialRating;
   final String description;
   final String submitButton;
   final String alternativeButton;
@@ -154,6 +162,7 @@ class RatingDialog extends StatefulWidget {
       @required this.description,
       @required this.onSubmitPressed,
       @required this.submitButton,
+      this.initialRating,
       this.accentColor = Colors.blue,
       this.alternativeButton = "",
       this.positiveComment = "",
