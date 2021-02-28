@@ -156,19 +156,20 @@ class RatingDialog extends StatefulWidget {
 
   final VoidCallback onAlternativePressed;
 
-  RatingDialog(
-      {@required this.icon,
-      @required this.title,
-      @required this.description,
-      @required this.onSubmitPressed,
-      @required this.submitButton,
-      this.initialRating,
-      this.accentColor = Colors.blue,
-      this.alternativeButton = "",
-      this.positiveComment = "",
-      this.negativeComment = "",
-      this.onAlternativePressed,
-      this.onCommentPressed});
+  RatingDialog({
+    @required this.icon,
+    @required this.title,
+    @required this.description,
+    @required this.onSubmitPressed,
+    @required this.submitButton,
+    this.initialRating = 0,
+    this.accentColor = Colors.blue,
+    this.alternativeButton = "",
+    this.positiveComment = "",
+    this.negativeComment = "",
+    this.onAlternativePressed,
+    this.onCommentPressed,
+  });
 
   @override
   _RatingDialogState createState() => new _RatingDialogState();
