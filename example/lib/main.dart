@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Rating Dialog Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.teal,
       ),
       home: ExampleScreen(),
     );
@@ -36,14 +36,14 @@ class _ExampleScreenState extends State<ExampleScreen> {
             alternativeButton: "Contact us instead?", // optional
             // positiveComment: "We are so happy to hear :)", // optional
             // negativeComment: "We're sad to hear :(", // optional
-            accentColor: Colors.blue, // optional
+            accentColor: Colors.black, // optional
             onSubmitPressed: (int rating) {
               print("onSubmitPressed: rating = $rating");
               // TODO: open the app's page on Google Play / Apple App Store
             },
             // onAlternativePressed: () {
             //   print("onAlternativePressed: do something");
-            //   // TODO: maybe you want the user to contact you instead of rating a bad review
+            // TODO: maybe you want the user to contact you instead of rating a bad review
             // },
             onCommentPressed: (value) {
               commentw = value;
@@ -61,7 +61,7 @@ class _ExampleScreenState extends State<ExampleScreen> {
       ),
       body: Container(
         child: Center(
-          child: RaisedButton(
+          child: ElevatedButton(
             child: Text("Show Rating Dialog"),
             onPressed: _showRatingDialog,
           ),

@@ -2,9 +2,41 @@ library rating_dialog;
 
 import 'package:flutter/material.dart';
 
+class RatingDialog extends StatefulWidget {
+  final String title;
+  final String description;
+  final String submitButton;
+  late final String alternativeButton;
+  final String positiveComment;
+  final String negativeComment;
+  final Widget icon;
+  final Color accentColor;
+  final ValueSetter<int> onSubmitPressed;
+  late final ValueSetter<String>? onCommentPressed;
+
+  late final VoidCallback? onAlternativePressed;
+
+  RatingDialog({
+    required this.icon,
+    required this.title,
+    required this.description,
+    required this.onSubmitPressed,
+    required this.submitButton,
+    this.accentColor = Colors.red,
+    this.alternativeButton = "",
+    this.positiveComment = "",
+    this.negativeComment = "",
+    this.onAlternativePressed,
+    this.onCommentPressed,
+  });
+
+  @override
+  _RatingDialogState createState() => new _RatingDialogState();
+}
+
 class _RatingDialogState extends State<RatingDialog> {
   int _rating = 0;
-  String _comment = '';
+  late String _comment = '';
   List<Widget> _buildStarRatingButtons() {
     List<Widget> buttons = [];
 
@@ -59,7 +91,7 @@ class _RatingDialogState extends State<RatingDialog> {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 const Divider(),
-                FlatButton(
+                ElevatedButton(
                   child: Text(
                     widget.submitButton,
                     style: TextStyle(
@@ -88,7 +120,7 @@ class _RatingDialogState extends State<RatingDialog> {
                 ),
                 Visibility(
                   visible: _rating <= 3 && widget.alternativeButton.isNotEmpty,
-                  child: FlatButton(
+                  child: ElevatedButton(
                     child: Text(
                       widget.alternativeButton,
                       style: TextStyle(
@@ -97,7 +129,8 @@ class _RatingDialogState extends State<RatingDialog> {
                     ),
                     onPressed: () {
                       Navigator.pop(context);
-                      widget.onAlternativePressed();
+
+                      widget.onAlternativePressed!();
                     },
                   ),
                 ),
@@ -123,44 +156,13 @@ class _RatingDialogState extends State<RatingDialog> {
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
           ),
         ),
-        FlatButton(
-            color: widget.accentColor,
+        TextButton(
+            style: TextButton.styleFrom(primary: widget.accentColor),
             onPressed: () {
-              widget.onCommentPressed(_comment);
+              widget.onCommentPressed!(_comment);
             },
             child: Text('Comment'))
       ],
     );
   }
-}
-
-class RatingDialog extends StatefulWidget {
-  final String title;
-  final String description;
-  final String submitButton;
-  final String alternativeButton;
-  final String positiveComment;
-  final String negativeComment;
-  final Widget icon;
-  final Color accentColor;
-  final ValueSetter<int> onSubmitPressed;
-  final ValueSetter<String> onCommentPressed;
-
-  final VoidCallback onAlternativePressed;
-
-  RatingDialog(
-      {@required this.icon,
-      @required this.title,
-      @required this.description,
-      @required this.onSubmitPressed,
-      @required this.submitButton,
-      this.accentColor = Colors.blue,
-      this.alternativeButton = "",
-      this.positiveComment = "",
-      this.negativeComment = "",
-      this.onAlternativePressed,
-      this.onCommentPressed});
-
-  @override
-  _RatingDialogState createState() => new _RatingDialogState();
 }
