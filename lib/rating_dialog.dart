@@ -35,8 +35,20 @@ class RatingDialog extends StatefulWidget {
 }
 
 class _RatingDialogState extends State<RatingDialog> {
+
   int _rating = 0;
   late String _comment = '';
+
+  int _rating;
+
+  @override
+  void initState() {
+    _rating = widget.initialRating;
+    super.initState();
+  }
+
+  String _comment = '';
+
   List<Widget> _buildStarRatingButtons() {
     List<Widget> buttons = [];
 
@@ -166,3 +178,4 @@ class _RatingDialogState extends State<RatingDialog> {
     );
   }
 }
+
