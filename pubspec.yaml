@@ -1,7 +1,6 @@
 name: rating_dialog
 description: A beautiful and customizable Star Rating Dialog package for Flutter
-version: 2.0.0-null-safety
-author: Oliver Martinez <nemoryoliver@gmail.com>
+version: 2.0.0
 homepage: https://github.com/nemoryoliver/rating_dialog
 
 environment:

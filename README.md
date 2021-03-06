@@ -14,7 +14,7 @@ Add the following import to your Dart code:
 import 'package:rating_dialog/rating_dialog.dart';
 ```
 
-We use the built in showDialog function to show our Rating Dialog
+We use the flutter's showDialog function to show our Rating Dialog
 ``` dart
 final _dialog = RatingDialog(
     // your app's name?
