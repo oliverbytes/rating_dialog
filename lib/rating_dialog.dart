@@ -1,181 +1,159 @@
 library rating_dialog;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
-class RatingDialog extends StatefulWidget {
+class RatingDialog extends StatelessWidget {
+  /// The dialog's title
   final String title;
-  final String description;
+
+  /// The dialog's message/description text
+  final String message;
+
+  /// The top image used for the dialog to be displayed
+  final Widget image;
+
+  /// The rating bar (star icon & glow) color
+  final Color ratingColor;
+
+  /// Disables the cancel button and forces the user to leave a rating
+  final bool force;
+
+  /// The initial rating of the rating bar
+  final int initialRating;
+
+  /// The comment's TextField hint text
+  final String commentHint;
+
+  /// The submit button's label/text
   final String submitButton;
-  late final String alternativeButton;
-  final String positiveComment;
-  final String negativeComment;
-  final Widget icon;
-  final Color accentColor;
-  final ValueSetter<int> onSubmitPressed;
-  late final ValueSetter<String>? onCommentPressed;
 
-  late final VoidCallback? onAlternativePressed;
+  /// Returns a RatingDialogResponse with user's rating and comment values
+  final Function(RatingDialogResponse) onSubmitted;
 
-  RatingDialog({
-    required this.icon,
+  /// called when user cancels/closes the dialog
+  final Function? onCancelled;
+
+  const RatingDialog({
     required this.title,
-    required this.description,
-    required this.onSubmitPressed,
+    required this.message,
+    required this.image,
     required this.submitButton,
-    this.accentColor = Colors.red,
-    this.alternativeButton = "",
-    this.positiveComment = "",
-    this.negativeComment = "",
-    this.onAlternativePressed,
-    this.onCommentPressed,
+    required this.onSubmitted,
+    this.ratingColor = Colors.amber,
+    this.onCancelled,
+    this.force = false,
+    this.initialRating = 1,
+    this.commentHint = 'Tell us your comments',
   });
 
   @override
-  _RatingDialogState createState() => new _RatingDialogState();
-}
-
-class _RatingDialogState extends State<RatingDialog> {
-
-  int _rating = 0;
-  late String _comment = '';
-
-  int _rating;
-
-  @override
-  void initState() {
-    _rating = widget.initialRating;
-    super.initState();
-  }
-
-  String _comment = '';
-
-  List<Widget> _buildStarRatingButtons() {
-    List<Widget> buttons = [];
-
-    for (int rateValue = 1; rateValue <= 5; rateValue++) {
-      final starRatingButton = IconButton(
-          icon: Icon(_rating >= rateValue ? Icons.star : Icons.star_border,
-              color: widget.accentColor, size: 35),
-          onPressed: () {
-            setState(() {
-              _rating = rateValue;
-            });
-          });
-      buttons.add(starRatingButton);
-    }
-
-    return buttons;
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final String commentText =
-        _rating >= 4 ? widget.positiveComment : widget.negativeComment;
-    // final Color commentColor = _rating >= 4 ? Colors.green[600] : Colors.red;
+    final _commentController = TextEditingController();
+    final _response = RatingDialogResponse();
 
-    return AlertDialog(
-      contentPadding: EdgeInsets.all(20),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          widget.icon,
-          const SizedBox(height: 4),
-          Text(widget.title,
-              style:
-                  const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 4),
-          Text(
-            widget.description,
-            textAlign: TextAlign.center,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: _buildStarRatingButtons(),
-          ),
-          Visibility(
-            visible: _rating > 0,
-            child: _buildUserComment(),
-          ),
-          Visibility(
-            visible: _rating > 0,
+    final _content = Stack(
+      alignment: Alignment.topRight,
+      children: <Widget>[
+        ClipRRect(
+          borderRadius: BorderRadius.circular(20.0),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(25, 30, 25, 5),
             child: Column(
               mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                const Divider(),
-                ElevatedButton(
+                Padding(
+                  child: image,
+                  padding: const EdgeInsets.only(top: 25, bottom: 25),
+                ),
+                Text(
+                  title,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 15),
+                Text(
+                  message,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 15),
+                ),
+                const SizedBox(height: 10),
+                Center(
+                  child: RatingBar.builder(
+                    initialRating: initialRating.toDouble(),
+                    glowColor: ratingColor,
+                    minRating: 1.0,
+                    direction: Axis.horizontal,
+                    allowHalfRating: false,
+                    itemCount: 5,
+                    itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                    onRatingUpdate: (rating) =>
+                        _response.rating = rating.toInt(),
+                    itemBuilder: (context, _) => Icon(
+                      Icons.star,
+                      color: ratingColor,
+                    ),
+                  ),
+                ),
+                TextField(
+                  controller: _commentController,
+                  textAlign: TextAlign.center,
+                  textInputAction: TextInputAction.newline,
+                  minLines: 1,
+                  maxLines: 5,
+                  decoration: InputDecoration(
+                    hintText: commentHint,
+                  ),
+                ),
+                TextButton(
                   child: Text(
-                    widget.submitButton,
+                    submitButton,
                     style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: widget.accentColor,
-                        fontSize: 18),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 17,
+                    ),
                   ),
                   onPressed: () {
-                    Navigator.pop(context);
-                    widget.onSubmitPressed(
-                      _rating,
-                    );
+                    if (!force) Navigator.pop(context);
+                    _response.comment = _commentController.text;
+                    onSubmitted.call(_response);
                   },
-                ),
-                Visibility(
-                  visible: commentText.isNotEmpty,
-                  child: Column(
-                    children: <Widget>[
-                      SizedBox(height: 7),
-                      Text(
-                        commentText,
-                        textAlign: TextAlign.center,
-                      )
-                    ],
-                  ),
-                ),
-                Visibility(
-                  visible: _rating <= 3 && widget.alternativeButton.isNotEmpty,
-                  child: ElevatedButton(
-                    child: Text(
-                      widget.alternativeButton,
-                      style: TextStyle(
-                          color: widget.accentColor,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-
-                      widget.onAlternativePressed!();
-                    },
-                  ),
                 ),
               ],
             ),
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildUserComment() {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        TextField(
-          maxLines: 1,
-          onChanged: (value) {
-            _comment = value;
-          },
-          decoration: InputDecoration(
-            hintText: 'Add Comment',
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-          ),
         ),
-        TextButton(
-            style: TextButton.styleFrom(primary: widget.accentColor),
+        if (!force && onCancelled != null) ...[
+          IconButton(
+            icon: const Icon(Icons.close, size: 18),
             onPressed: () {
-              widget.onCommentPressed!(_comment);
+              Navigator.pop(context);
+              onCancelled!.call();
             },
-            child: Text('Comment'))
+          )
+        ]
       ],
+    );
+
+    return AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      titlePadding: EdgeInsets.zero,
+      scrollable: true,
+      title: _content,
     );
   }
 }
 
+class RatingDialogResponse {
+  /// The user's comment response
+  String comment = '';
+
+  /// The user's rating response
+  int rating = 1;
+}
