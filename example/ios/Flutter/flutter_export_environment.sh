@@ -1,15 +1,16 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
-export "FLUTTER_ROOT=/Users/saichandankadarla/Developer/flutter"
-export "FLUTTER_APPLICATION_PATH=/Users/saichandankadarla/Desktop/rating_dailog/rating_dialog/example"
-export "FLUTTER_TARGET=lib/main.dart"
+
+export "FLUTTER_ROOT=/Users/daveagyakwa/fvm/versions/stable"
+export "FLUTTER_APPLICATION_PATH=/Users/daveagyakwa/Documents/workingDir/flutterland/OpenSource/rating_dialog/example"
+export "FLUTTER_TARGET=/Users/daveagyakwa/Documents/workingDir/flutterland/OpenSource/rating_dialog/example/lib/main.dart"
 export "FLUTTER_BUILD_DIR=build"
 export "SYMROOT=${SOURCE_ROOT}/../build/ios"
-export "OTHER_LDFLAGS=$(inherited) -framework Flutter"
-export "FLUTTER_FRAMEWORK_DIR=/Users/saichandankadarla/Developer/flutter/bin/cache/artifacts/engine/ios"
 export "FLUTTER_BUILD_NAME=1.0.0"
-export "FLUTTER_BUILD_NUMBER=1"
+export "FLUTTER_BUILD_NUMBER=2"
+export "DART_DEFINES=flutter.inspector.structuredErrors%3Dtrue"
+
 export "DART_OBFUSCATION=false"
 export "TRACK_WIDGET_CREATION=false"
 export "TREE_SHAKE_ICONS=false"
-export "PACKAGE_CONFIG=.packages"
+export "PACKAGE_CONFIG=/Users/daveagyakwa/Documents/workingDir/flutterland/OpenSource/rating_dialog/example/.dart_tool/package_config.json"
