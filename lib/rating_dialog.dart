@@ -22,6 +22,9 @@ class RatingDialog extends StatelessWidget {
   /// The initial rating of the rating bar
   final int initialRating;
 
+  /// Display comment input area
+  final bool enableComment;
+
   /// The comment's TextField hint text
   final String commentHint;
 
@@ -44,6 +47,7 @@ class RatingDialog extends StatelessWidget {
     this.onCancelled,
     this.force = false,
     this.initialRating = 1,
+    this.enableComment = true,
     this.commentHint = 'Tell us your comments',
   });
 
@@ -103,16 +107,18 @@ class RatingDialog extends StatelessWidget {
                     ),
                   ),
                 ),
-                TextField(
-                  controller: _commentController,
-                  textAlign: TextAlign.center,
-                  textInputAction: TextInputAction.newline,
-                  minLines: 1,
-                  maxLines: 5,
-                  decoration: InputDecoration(
-                    hintText: commentHint,
-                  ),
-                ),
+                enableComment
+                    ? TextField(
+                        controller: _commentController,
+                        textAlign: TextAlign.center,
+                        textInputAction: TextInputAction.newline,
+                        minLines: 1,
+                        maxLines: 5,
+                        decoration: InputDecoration(
+                          hintText: commentHint,
+                        ),
+                      )
+                    : const SizedBox(height: 15),
                 TextButton(
                   child: Text(
                     submitButton,
