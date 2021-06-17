@@ -1,3 +1,8 @@
+## [2.0.1] - June 17, 2021
+set initial `rating` value via constructor
+new `enableComment` parameter to enable/disable comment area
+improved `message` and `image` are now optional
+
 ## [2.0.0] - March 6, 2021
 * **Breaking Changes** 
 `description` parameter is renamed to `message`,
