@@ -8,10 +8,10 @@ class RatingDialog extends StatelessWidget {
   final String title;
 
   /// The dialog's message/description text
-  final String message;
+  final String? message;
 
   /// The top image used for the dialog to be displayed
-  final Widget image;
+  final Widget? image;
 
   /// The rating bar (star icon & glow) color
   final Color ratingColor;
@@ -21,6 +21,9 @@ class RatingDialog extends StatelessWidget {
 
   /// The initial rating of the rating bar
   final int initialRating;
+
+  /// Display comment input area
+  final bool enableComment;
 
   /// The comment's TextField hint text
   final String commentHint;
@@ -36,14 +39,15 @@ class RatingDialog extends StatelessWidget {
 
   const RatingDialog({
     required this.title,
-    required this.message,
-    required this.image,
+    this.message,
+    this.image,
     required this.submitButton,
     required this.onSubmitted,
     this.ratingColor = Colors.amber,
     this.onCancelled,
     this.force = false,
     this.initialRating = 1,
+    this.enableComment = true,
     this.commentHint = 'Tell us your comments',
   });
 
@@ -63,10 +67,12 @@ class RatingDialog extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                Padding(
-                  child: image,
-                  padding: const EdgeInsets.only(top: 25, bottom: 25),
-                ),
+                image != null
+                    ? Padding(
+                        child: image,
+                        padding: const EdgeInsets.only(top: 25, bottom: 25),
+                      )
+                    : Container(),
                 Text(
                   title,
                   textAlign: TextAlign.center,
@@ -76,11 +82,13 @@ class RatingDialog extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 15),
-                Text(
-                  message,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 15),
-                ),
+                message != null
+                    ? Text(
+                        message!,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(fontSize: 15),
+                      )
+                    : Container(),
                 const SizedBox(height: 10),
                 Center(
                   child: RatingBar.builder(
@@ -99,16 +107,18 @@ class RatingDialog extends StatelessWidget {
                     ),
                   ),
                 ),
-                TextField(
-                  controller: _commentController,
-                  textAlign: TextAlign.center,
-                  textInputAction: TextInputAction.newline,
-                  minLines: 1,
-                  maxLines: 5,
-                  decoration: InputDecoration(
-                    hintText: commentHint,
-                  ),
-                ),
+                enableComment
+                    ? TextField(
+                        controller: _commentController,
+                        textAlign: TextAlign.center,
+                        textInputAction: TextInputAction.newline,
+                        minLines: 1,
+                        maxLines: 5,
+                        decoration: InputDecoration(
+                          hintText: commentHint,
+                        ),
+                      )
+                    : const SizedBox(height: 15),
                 TextButton(
                   child: Text(
                     submitButton,
