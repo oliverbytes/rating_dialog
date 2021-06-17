@@ -54,7 +54,7 @@ class RatingDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _commentController = TextEditingController();
-    final _response = RatingDialogResponse();
+    final _response = RatingDialogResponse(rating: initialRating);
 
     final _content = Stack(
       alignment: Alignment.topRight,
@@ -165,5 +165,7 @@ class RatingDialogResponse {
   String comment = '';
 
   /// The user's rating response
-  int rating = 1;
+  int rating;
+
+  RatingDialogResponse({this.rating = 1});
 }
