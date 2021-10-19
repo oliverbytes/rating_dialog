@@ -3,24 +3,30 @@ library rating_dialog;
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
-class RatingDialog extends StatelessWidget {
+class RatingDialog extends StatefulWidget {
   /// The dialog's title
-  final String title;
+  final Text title;
 
   /// The dialog's message/description text
-  final String? message;
+  final Text? message;
 
   /// The top image used for the dialog to be displayed
   final Widget? image;
 
   /// The rating bar (star icon & glow) color
-  final Color ratingColor;
+  final Color starColor;
+
+  /// The size of the star
+  final double starSize;
 
   /// Disables the cancel button and forces the user to leave a rating
   final bool force;
 
+  /// Show or hide the close button
+  final bool showCloseButton;
+
   /// The initial rating of the rating bar
-  final int initialRating;
+  final double initialRating;
 
   /// Display comment input area
   final bool enableComment;
@@ -29,7 +35,10 @@ class RatingDialog extends StatelessWidget {
   final String commentHint;
 
   /// The submit button's label/text
-  final String submitButton;
+  final String submitButtonText;
+
+  /// The submit button's label/text
+  final TextStyle submitButtonTextStyle;
 
   /// Returns a RatingDialogResponse with user's rating and comment values
   final Function(RatingDialogResponse) onSubmitted;
@@ -41,21 +50,38 @@ class RatingDialog extends StatelessWidget {
     required this.title,
     this.message,
     this.image,
-    required this.submitButton,
+    required this.submitButtonText,
+    this.submitButtonTextStyle = const TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: 17,
+    ),
     required this.onSubmitted,
-    this.ratingColor = Colors.amber,
+    this.starColor = Colors.amber,
+    this.starSize = 40.0,
     this.onCancelled,
+    this.showCloseButton = true,
     this.force = false,
-    this.initialRating = 1,
+    this.initialRating = 0,
     this.enableComment = true,
     this.commentHint = 'Tell us your comments',
   });
 
   @override
-  Widget build(BuildContext context) {
-    final _commentController = TextEditingController();
-    final _response = RatingDialogResponse(rating: initialRating);
+  State<RatingDialog> createState() => _RatingDialogState();
+}
 
+class _RatingDialogState extends State<RatingDialog> {
+  final _commentController = TextEditingController();
+  RatingDialogResponse? _response;
+
+  @override
+  void initState() {
+    super.initState();
+    _response = RatingDialogResponse(rating: widget.initialRating);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final _content = Stack(
       alignment: Alignment.topRight,
       children: <Widget>[
@@ -67,47 +93,38 @@ class RatingDialog extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                image != null
+                widget.image != null
                     ? Padding(
-                        child: image,
+                        child: widget.image,
                         padding: const EdgeInsets.only(top: 25, bottom: 25),
                       )
                     : Container(),
-                Text(
-                  title,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                widget.title,
                 const SizedBox(height: 15),
-                message != null
-                    ? Text(
-                        message!,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(fontSize: 15),
-                      )
-                    : Container(),
+                widget.message ?? Container(),
                 const SizedBox(height: 10),
                 Center(
                   child: RatingBar.builder(
-                    initialRating: initialRating.toDouble(),
-                    glowColor: ratingColor,
-                    minRating: 1.0,
+                    initialRating: widget.initialRating,
+                    glowColor: widget.starColor,
+                    minRating: 0,
+                    itemSize: widget.starSize,
                     direction: Axis.horizontal,
                     allowHalfRating: false,
                     itemCount: 5,
                     itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                    onRatingUpdate: (rating) =>
-                        _response.rating = rating.toInt(),
+                    onRatingUpdate: (rating) {
+                      setState(() {
+                        _response!.rating = rating;
+                      });
+                    },
                     itemBuilder: (context, _) => Icon(
                       Icons.star,
-                      color: ratingColor,
+                      color: widget.starColor,
                     ),
                   ),
                 ),
-                enableComment
+                widget.enableComment
                     ? TextField(
                         controller: _commentController,
                         textAlign: TextAlign.center,
@@ -115,34 +132,35 @@ class RatingDialog extends StatelessWidget {
                         minLines: 1,
                         maxLines: 5,
                         decoration: InputDecoration(
-                          hintText: commentHint,
+                          hintText: widget.commentHint,
                         ),
                       )
                     : const SizedBox(height: 15),
                 TextButton(
                   child: Text(
-                    submitButton,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 17,
-                    ),
+                    widget.submitButtonText,
+                    style: widget.submitButtonTextStyle,
                   ),
-                  onPressed: () {
-                    if (!force) Navigator.pop(context);
-                    _response.comment = _commentController.text;
-                    onSubmitted.call(_response);
-                  },
+                  onPressed: _response!.rating == 0
+                      ? null
+                      : () {
+                          if (!widget.force) Navigator.pop(context);
+                          _response!.comment = _commentController.text;
+                          widget.onSubmitted.call(_response!);
+                        },
                 ),
               ],
             ),
           ),
         ),
-        if (!force && onCancelled != null) ...[
+        if (!widget.force &&
+            widget.onCancelled != null &&
+            widget.showCloseButton) ...[
           IconButton(
             icon: const Icon(Icons.close, size: 18),
             onPressed: () {
               Navigator.pop(context);
-              onCancelled!.call();
+              widget.onCancelled!.call();
             },
           )
         ]
@@ -162,10 +180,10 @@ class RatingDialog extends StatelessWidget {
 
 class RatingDialogResponse {
   /// The user's comment response
-  String comment = '';
+  String comment;
 
   /// The user's rating response
-  int rating;
+  double rating;
 
-  RatingDialogResponse({this.rating = 1});
+  RatingDialogResponse({this.rating = 0.0, this.comment = ''});
 }

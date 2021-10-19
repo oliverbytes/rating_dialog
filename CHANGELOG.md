@@ -1,3 +1,16 @@
+## [2.0.2] - October 19, 2021
+* **Breaking Changes** 
+`title` & `message` parameter has been changed from type `String` to `Text`,
+`initialRating` parameter has been changed from type `int` to `double`
+`submitButton` parameter has been renamed to `submitButtonText`
+`ratingColor` parameter has been renamed to `starColor`
+default `initialRating` value to `0.0`
+
+* New! `starSize` parameter to set the size of the star
+* New! `submitButtonTextStyle` parameter to set your custom text style for the submit button
+* Improved! Changed from `StatelessWidget` to `StatefulWidget`
+* Improved! `Submit Button` is automatically disabled when rating is `0`
+
 ## [2.0.1] - June 17, 2021
 set initial `rating` value via constructor
 new `enableComment` parameter to enable/disable comment area
