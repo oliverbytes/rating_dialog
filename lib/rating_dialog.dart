@@ -136,7 +136,7 @@ class _RatingDialogState extends State<RatingDialog> {
                         ),
                       )
                     : const SizedBox(height: 15),
-                TextButton(
+                ElevatedButton(
                   child: Text(
                     widget.submitButtonText,
                     style: widget.submitButtonTextStyle,
@@ -169,7 +169,7 @@ class _RatingDialogState extends State<RatingDialog> {
 
     return AlertDialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15.0),
+        borderRadius: BorderRadius.circular(5.0),
       ),
       titlePadding: EdgeInsets.zero,
       scrollable: true,
